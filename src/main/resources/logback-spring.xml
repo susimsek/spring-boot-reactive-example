@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <springProperty name="spring.application.name" source="spring.application.name" defaultValue="my-app"/>
+    <springProperty name="logging.level.root" source="logging.level.root" defaultValue="INFO" />
+    <springProperty name="logging.pattern.console" source="logging.pattern"
+                    defaultValue="%clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}){faint} %clr(%5p){highlight} %clr(${PID:- }){magenta} --- [%clr(${spring.application.name:-}){green},%X{traceId:-},%X{spanId:-}] [%clr(%t){faint}] %clr(%-40.40logger{39}){cyan} %clr(:){faint} %msg%n%clr(%wEx){red}"/>
+
+    <springProperty name="logging.async.queueSize" source="logging.async.queueSize" defaultValue="10000"/>
+    <springProperty name="logging.async.discardingThreshold" source="logging.async.discardingThreshold" defaultValue="0"/>
+    <springProperty name="logging.async.maxFlushTime" source="logging.async.maxFlushTime" defaultValue="1000"/>
+    <springProperty name="logging.async.includeCallerData" source="logging.async.includeCallerData" defaultValue="false"/>
+
+    <logger name="io.netty" level="WARN"/>
+    <logger name="org.apache" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.hibernate.validator" level="WARN"/>
+    <logger name="org.postgresql" level="WARN"/>
+    <logger name="org.redisson" level="WARN"/>
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.web" level="WARN"/>
+    <logger name="org.springframework.graphql" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+    <logger name="org.springframework.security.oauth2" level="WARN"/>
+    <logger name="org.springframework.boot.autoconfigure.logging" level="INFO"/>
+    <logger name="org.springframework.cache" level="WARN"/>
+    <logger name="org.springframework.web.socket" level="WARN"/>
+    <logger name="org.thymeleaf" level="WARN"/>
+    <logger name="liquibase" level="WARN"/>
+    <logger name="io.github.resilience4j" level="WARN"/>
+    <logger name="io.netty" level="WARN"/>
+    <logger name="com.netflix" level="WARN"/>
+    <logger name="com.netflix.discovery" level="WARN"/>
+    <logger name="io.swagger.v3" level="WARN"/>
+    <logger name="reactor" level="WARN"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${logging.pattern.console}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC_CONSOLE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>${logging.async.queueSize}</queueSize>
+        <discardingThreshold>${logging.async.discardingThreshold}</discardingThreshold>
+        <maxFlushTime>${logging.async.maxFlushTime}</maxFlushTime>
+        <includeCallerData>${logging.async.includeCallerData}</includeCallerData>
+        <appender-ref ref="CONSOLE"/>
+    </appender>
+
+    <root level="${logging.level.root}">
+        <appender-ref ref="ASYNC_CONSOLE"/>
+    </root>
+</configuration>

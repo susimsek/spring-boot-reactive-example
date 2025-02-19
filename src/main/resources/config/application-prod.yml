@@ -1,0 +1,43 @@
+server:
+  port: 8080
+  shutdown: graceful
+  http2:
+    enabled: true
+  compression:
+    enabled: true
+    min-response-size: 1024
+    mime-types: text/html,text/xml,text/plain,text/css,application/javascript,application/json,image/svg+xml
+
+spring:
+  messages:
+    cache-duration: 1h
+  liquibase:
+    contexts: prod
+    url: jdbc:postgresql://localhost:5432/demo
+    user: ${spring.r2dbc.username}
+    password: ${spring.r2dbc.password}
+  cache:
+    default-config:
+      ttl: 1h
+      initial-capacity: 5000
+      maximum-size: 10000
+  webclient:
+    connect-timeout: 5s
+    read-timeout: 10s
+    clients:
+      todoClient:
+        url: https://jsonplaceholder.typicode.com
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/demo
+    username: admin
+    password: password
+
+logging:
+  level:
+    ROOT: INFO
+    io.github.susimsek.springbootreactiveexample: INFO
+  async:
+    queueSize: 10000
+    discardingThreshold: 0
+    maxFlushTime: 5000
+    includeCallerData: false

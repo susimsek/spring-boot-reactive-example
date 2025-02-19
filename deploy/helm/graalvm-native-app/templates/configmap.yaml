@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "reactive-app.fullname" . | quote }}
+  namespace: {{ include "reactive-app.namespace" . | quote }}
+  labels: {{- include "reactive-app.labels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: reactive-app
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "reactive-app.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  SERVER_PORT: {{ .Values.spring.server.port | quote }}

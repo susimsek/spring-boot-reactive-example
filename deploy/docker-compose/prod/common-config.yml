@@ -1,0 +1,14 @@
+services:
+  network-deploy-service:
+    networks:
+      - app
+
+  app-base-config:
+    extends:
+      service: network-deploy-service
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+    environment:
+      SPRING_PROFILES_ACTIVE: prod

@@ -1,0 +1,11 @@
+id;title;completed;created_at;updated_at
+1;Learn Spring WebFlux;false;2024-01-01T08:00:00;2024-01-01T08:00:00
+2;Practice Kotlin Coroutines;true;2024-01-02T10:30:00;2024-01-02T15:45:00
+3;Integrate Liquibase with H2;false;2024-01-03T12:15:00;2024-01-03T12:15:00
+4;Create Todo API with WebFlux;true;2024-01-04T14:00:00;2024-01-04T18:30:00
+5;Optimize Reactive Performance;false;2024-01-05T09:45:00;2024-01-05T09:45:00
+6;Write Unit Tests for API;true;2024-01-06T11:00:00;2024-01-06T13:15:00
+7;Implement JWT Authentication;false;2024-01-07T16:20:00;2024-01-07T16:20:00
+8;Refactor Todo Service Layer;true;2024-01-08T18:00:00;2024-01-08T21:30:00
+9;Deploy App to Docker;false;2024-01-09T07:40:00;2024-01-09T07:40:00
+10;Monitor and Scale Microservice;true;2024-01-10T20:10:00;2024-01-10T22:00:00

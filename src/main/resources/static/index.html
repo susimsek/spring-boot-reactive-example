@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GraalVM Native Images</title>
+  <link rel="icon" href="/favicons/favicon-light.ico" type="image/x-icon">
+  <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/webjars/font-awesome/css/all.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+  <script src="http://localhost:35729/livereload.js"></script>
+  <script src="/webjars/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="/js/main.js" defer></script>
+</head>
+<body class="d-flex flex-column">
+<!-- Header -->
+<header>
+  <nav class="navbar">
+    <div class="navbar-brand d-flex align-items-center">
+      <a class="navbar-item" href="/">
+        <img src="/images/logo.png" alt="GraalVM" class="logo">
+      </a>
+    </div>
+    <!-- Tema Geçiş Switch -->
+    <div class="theme-toggler">
+      <input type="checkbox" id="themeToggle" class="switch-theme-checkbox">
+      <label for="themeToggle" class="switch-theme-label">
+        <span class="icon sun-icon"><i class="fa fa-sun"></i></span>
+        <span class="icon moon-icon"><i class="fa fa-moon"></i></span>
+      </label>
+    </div>
+  </nav>
+</header>
+
+<!-- Main Content -->
+<main class="d-flex justify-content-center align-items-center">
+  <div class="card col-md-8 mx-3 p-4 shadow-sm custom-card">
+    <h3 class="card-title mb-4">GraalVM Native Images</h3>
+    <div class="card-image mb-4">
+      <img src="/images/graalvm.png" alt="GraalVM" class="card-img">
+    </div>
+    <p class="card-text mb-4">
+      Discover the power of Spring Boot combined with GraalVM Native Images! Experience faster startup times, reduced memory usage, and seamless integration for modern Java applications.
+    </p>
+    <div class="d-flex flex-column flex-md-row gap-3 justify-content-start">
+      <button id="fetchHello" class="btn btn-primary px-4 py-2 shadow-sm">Fetch Hello</button>
+      <button id="resetResponse" class="btn btn-secondary px-4 py-2 shadow-sm" disabled>Reset Response</button>
+    </div>
+    <div class="mt-4">
+      <div id="apiResponse" class="alert d-none text-center" role="alert"></div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="d-flex">
+  <div class="container text-center">
+    <p class="mb-0"><i class="fa-regular fa-copyright"></i> 2024 - Built with Spring Boot and GraalVM</p>
+  </div>
+</footer>
+</body>
+</html>

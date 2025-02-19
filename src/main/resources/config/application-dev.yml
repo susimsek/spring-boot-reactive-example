@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  devtools:
+    restart:
+      enabled: true
+      exclude: static/**
+    livereload:
+      enabled: true
+      port: 35729
+  messages:
+    cache-duration: 1h
+  liquibase:
+    contexts: dev, faker
+    url: jdbc:h2:mem:demo;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    user: ${spring.r2dbc.username}
+    password: ${spring.r2dbc.password}
+  cache:
+    default-config:
+      ttl: 1h
+      initial-capacity: 5000
+      maximum-size: 10000
+  webclient:
+    connect-timeout: 5s
+    read-timeout: 10s
+    clients:
+      todoClient:
+        url: https://jsonplaceholder.typicode.com
+  r2dbc:
+    url: r2dbc:h2:mem:///demo;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: admin
+    password: root
+
+logging:
+  level:
+    ROOT: DEBUG
+    io.github.susimsek.springbootreactiveexample: DEBUG
+  async:
+    queueSize: 10000
+    discardingThreshold: 0
+    maxFlushTime: 5000
+    includeCallerData: false
+
+management:
+  tracing:
+    enabled: false
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411

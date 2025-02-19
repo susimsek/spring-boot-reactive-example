@@ -1,0 +1,93 @@
+name: Build, Test, and Publish Application
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+      packages: write
+    env:
+      SPRING_OUTPUT_ANSI_ENABLED: DETECT
+    steps:
+      # Set up swap space for Linux
+      - name: Set up swap space
+        uses: pierotofy/set-swap-space@v1.0
+        with:
+          swap-size-gb: 10
+
+      # Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Set up Java Development Kit (JDK) and GraalVM
+      - name: Set up GraalVM (Java 21)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          distribution: 'liberica'
+          version: '22.3.0'
+          java-version: '21'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: 'maven'
+
+      # Install UPX
+      - name: Install UPX
+        run: sudo apt-get update && sudo apt-get install -y upx
+
+      # Configure Maven settings for GitHub Packages
+      - name: Configure Maven for GitHub Packages
+        run: |
+          mkdir -p ~/.m2
+          echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+                  <servers>
+                    <server>
+                      <id>github</id>
+                      <username>${{ github.actor }}</username>
+                      <password>${{ secrets.GITHUB_TOKEN }}</password>
+                    </server>
+                  </servers>
+                </settings>' > ~/.m2/settings.xml
+
+      # Download all required dependencies
+      - name: Download Dependencies
+        run: mvn -ntp dependency:go-offline
+
+      # Run unit and integration tests
+      - name: Run Tests
+        run: mvn -ntp verify --batch-mode
+
+      # Build GraalVM Native Image
+      - name: Build GraalVM Native Image
+        run: |
+          mvn native:compile -B -ntp -Pnative,prod -DskipTests
+          upx --ultra-brute --lzma target/native-executable
+
+      # Perform quality analysis using SonarQube
+      - name: SonarQube Scan
+        run: mvn -ntp -Psonar initialize sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+
+      # Deploy the application to GitHub Packages
+      - name: Deploy to GitHub Packages
+        run: mvn deploy -Pprod -Dgpg.skip -Dgithub -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build Docker Image
+      - name: Build Docker Image
+        run: |
+          docker build -t docker.io/${{ secrets.DOCKER_USERNAME }}/graalvm-native-app:${{ github.ref_name }} .
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push docker.io/${{ secrets.DOCKER_USERNAME }}/graalvm-native-app:${{ github.ref_name }}
+
+
+

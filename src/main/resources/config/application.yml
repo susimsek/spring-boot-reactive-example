@@ -1,0 +1,106 @@
+spring:
+  profiles:
+    active: '@spring.profiles.active@'
+  application:
+    name: spring-boot-graalvm-native-example
+  main:
+    allow-bean-definition-overriding: true
+  jmx:
+    enabled: false
+  webflux:
+    problemdetails:
+      enabled: false
+  liquibase:
+    change-log: classpath:config/liquibase/master.xml
+  messages:
+    basename: i18n/messages
+  web:
+    locale: en
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 30d
+    locale-resolver: fixed
+  output:
+    ansi:
+      enabled: always
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+  cache:
+    cache-names:
+      - greetingCache
+
+management:
+  metrics:
+    enable:
+      http: true
+      jvm: true
+      logback: true
+      process: true
+      system: true
+    distribution:
+      percentiles-histogram:
+        all: true
+      percentiles:
+        all: 0, 0.5, 0.75, 0.95, 0.99, 1.0
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+        step: 60
+  observations:
+    key-values:
+      application: ${spring.application.name}
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+    mail:
+      enabled: false
+  endpoint:
+    shutdown:
+      access: unrestricted
+    health:
+      probes:
+        enabled: true
+      show-details: always
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: readinessState
+  info:
+    git:
+      mode: full
+    env:
+      enabled: true
+  tracing:
+    sampling:
+      probability: 1.0
+    enabled: true
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operationsSorter: method
+    default-model-expand-depth: 1
+    display-request-duration: true
+    default-model-rendering: schema
+    filter: true
+    show-extensions: true
+    try-it-out-enabled: true
+  show-actuator: false
+
+logging:
+  pattern: '%clr(%d{yyyy-MM-dd''T''HH:mm:ss.SSSXXX}){faint} %clr(%5p){highlight} %clr(${PID:- }){magenta} --- [%clr(${spring.application.name:-}){green},%X{traceId:-},%X{spanId:-}] [%clr(%t){faint}] %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%clr(%wEx){red}'
