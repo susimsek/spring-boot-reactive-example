@@ -81,3 +81,7 @@ Contains entity classes for reactive persistence.
 # Package io.github.susimsek.springbootreactiveexample.repository
 
 Repository layer.
+
+# Package io.github.susimsek.springbootreactiveexample.validation
+
+Provides custom validation annotations and validators.
