@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintValidator
 import jakarta.validation.ConstraintValidatorContext
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext
 
-class EnumValidator : ConstraintValidator<EnumConstraint, Any?> {
+class EnumValidator : ConstraintValidator<EnumConstraint, String?> {
 
     private lateinit var allowedValues: Set<String>
     private lateinit var message: String
@@ -16,16 +16,12 @@ class EnumValidator : ConstraintValidator<EnumConstraint, Any?> {
         this.message = annotation.message
     }
 
-    override fun isValid(value: Any?, context: ConstraintValidatorContext): Boolean {
+    override fun isValid(value: String?, context: ConstraintValidatorContext): Boolean {
         if (value == null) {
             return true
         }
 
-        val isValid = when {
-            value is String -> allowedValues.contains(value)
-            value::class.java.isEnum -> allowedValues.contains((value as Enum<*>).name)
-            else -> false
-        }
+        val isValid = allowedValues.contains(value)
 
         if (!isValid) {
             val allowedValuesString = allowedValues.joinToString(", ")

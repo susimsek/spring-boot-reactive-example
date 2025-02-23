@@ -4,7 +4,10 @@ import io.github.susimsek.springbootreactiveexample.dto.CreateTodoDTO
 import io.github.susimsek.springbootreactiveexample.dto.PartialUpdateTodoDTO
 import io.github.susimsek.springbootreactiveexample.dto.TodoDTO
 import io.github.susimsek.springbootreactiveexample.dto.UpdateTodoDTO
+import io.github.susimsek.springbootreactiveexample.enums.SortDirection
+import io.github.susimsek.springbootreactiveexample.enums.TodoSortField
 import io.github.susimsek.springbootreactiveexample.service.TodoService
+import io.github.susimsek.springbootreactiveexample.validation.EnumConstraint
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
@@ -14,7 +17,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
-import jakarta.validation.constraints.Pattern
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -64,24 +66,19 @@ class TodoController(private val todoService: TodoService) {
         @Max(100)
         size: Int,
 
-        @Parameter(description = "Sorting field (createdAt, title, completed)", example = "createdAt")
-        @RequestParam(required = false, defaultValue = "createdAt")
-        @Pattern(
-            regexp = "createdAt|title|completed",
-            message = "Invalid sort field. Allowed values: createdAt, title, completed"
-        )
+        @Parameter(description = "Sorting field", example = "CREATED_AT")
+        @Schema(implementation = TodoSortField::class)
+        @RequestParam(required = false, defaultValue = "CREATED_AT")
+        @EnumConstraint(enumClass = TodoSortField::class)
         sortField: String,
 
-        @Parameter(description = "Sorting direction (asc or desc)", example = "desc")
-        @RequestParam(required = false, defaultValue = "desc")
-        @Pattern(
-            regexp = "asc|desc",
-            message = "Invalid sort direction. Allowed values: asc, desc"
-        )
+        @Parameter(description = "Sorting direction", example = "DESC")
+        @Schema(implementation = SortDirection::class)
+        @RequestParam(required = false, defaultValue = "DESC")
+        @EnumConstraint(enumClass = SortDirection::class)
         sortDirection: String
     ): Flow<TodoDTO> {
-        val direction = Sort.Direction.fromOptionalString(sortDirection).orElse(Sort.Direction.DESC)
-        val sort = Sort.by(direction, sortField)
+        val sort = Sort.by(Sort.Direction.valueOf(sortDirection), sortField)
         val pageable: Pageable = PageRequest.of(page, size, sort)
         return todoService.getTodos(pageable)
     }
