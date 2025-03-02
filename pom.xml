@@ -43,7 +43,7 @@
     <native-build-args>--verbose -J-Xmx14g</native-build-args>
     <maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-    <sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
+    <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
     <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
     <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
     <detekt.configFile>${project.basedir}/detekt.yml</detekt.configFile>
