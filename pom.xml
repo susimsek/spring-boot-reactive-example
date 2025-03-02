@@ -41,7 +41,7 @@
     <font-awesome.version>6.0.0</font-awesome.version>
     <native-image-name>native-executable</native-image-name>
     <native-build-args>--verbose -J-Xmx14g</native-build-args>
-    <maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
+    <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <sonar-maven-plugin.version>3.11.0.3922</sonar-maven-plugin.version>
     <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
