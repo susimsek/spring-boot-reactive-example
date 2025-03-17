@@ -1,61 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Todo App</title>
+
   <!-- Bootstrap & Font Awesome -->
-  <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/webjars/font-awesome/css/all.min.css" rel="stylesheet">
-  <!-- LiveReload (optional) -->
-  <script src="http://localhost:35729/livereload.js"></script>
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="/webjars/font-awesome/css/all.min.css" rel="stylesheet" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
   <style>
+    :root {
+      /* Light Theme Variables */
+      --body-bg: #f8f9fa;
+      --body-color: #000;
+
+      /* Navbar */
+      --navbar-bg: #ffffff;
+      --navbar-box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+      --navbar-text: #000;
+      --navbar-toggler-border: #cccccc;
+
+      /* Table & Container */
+      --table-responsive-bg: #fff;
+      --table-responsive-border: 1px solid #ccc;
+      --table-bg: #fff;
+      --table-color: #000;
+      --table-thead-bg: #f8f9fa;
+      --table-thead-color: #000;
+      --table-tbody-bg: #fff;
+      --table-tbody-color: #000;
+      --table-border-color: #ccc;
+      --table-container-bg: #fff;
+      --table-container-box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+
+      /* Modal */
+      --modal-bg: #fff;
+      --modal-color: #000;
+      --modal-input-bg: #fff;
+      --modal-input-color: #000;
+      --modal-input-border: 1px solid #ccc;
+      --modal-border: 1px solid #ccc;
+
+      /* Pagination */
+      --pagination-container-bg: #fff;
+      --pagination-container-box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+      --pagination-link-bg: #fff;
+      --pagination-link-color: #000;
+      --pagination-link-border: 1px solid #ccc;
+      --pagination-active-bg: #007bff;
+      --pagination-active-border: #007bff;
+      --pagination-active-color: #fff;
+      --pagination-disabled-bg: #f8f9fa;
+      --pagination-disabled-color: #888;
+      --pagination-disabled-border: 1px solid #ccc;
+
+      /* Input Group & Form Select */
+      --input-group-text-bg: #fff;
+      --input-group-text-color: #000;
+      --input-group-text-border: 1px solid #ccc;
+      --form-select-bg: #fff;
+      --form-select-border: 1px solid #ccc;
+      --form-select-color: #000;
+      --custom-select-caret-color: #000;
+
+      /* Card */
+      --card-bg: #fff;
+      --card-color: #000;
+      --card-border: 1px solid #ccc;
+
+      /* Footer */
+      --footer-bg: #fff;
+      --footer-color: #000;
+      --footer-box-shadow: 0 -0.125rem 0.25rem rgba(0,0,0,0.075);
+
+      /* Theme Slider */
+      --theme-slider-bg: #dce5e8;
+      --theme-slider-icon-bg: #000;
+      --theme-slider-icon-color: #fff;
+    }
+
+    body.dark-theme {
+      /* Dark Theme Overrides */
+      --body-bg: #343a40;
+      --body-color: #ffffff;
+
+      --navbar-bg: #1b1f23;
+      --navbar-box-shadow: 0 0.125rem 0.25rem rgba(255,255,255,0.1);
+      --navbar-text: #ffffff;
+      --navbar-toggler-border: #ffffff;
+
+      --table-responsive-bg: #3b3b3b;
+      --table-responsive-border: 1px solid #555;
+      --table-bg: #3b3b3b;
+      --table-color: #ffffff;
+      --table-thead-bg: #464e53;
+      --table-thead-color: #ffffff;
+      --table-tbody-bg: #3b3b3b;
+      --table-tbody-color: #ffffff;
+      --table-border-color: #555;
+      --table-container-bg: #3b3b3b;
+      --table-container-box-shadow: 0 0.125rem 0.25rem rgba(255,255,255,0.1);
+
+      --modal-bg: #2c2c2c;
+      --modal-color: #ffffff;
+      --modal-input-bg: #3b3b3b;
+      --modal-input-color: #ffffff;
+      --modal-input-border: 1px solid #555;
+      --modal-border: 1px solid #555;
+
+      --pagination-container-bg: #3b3b3b;
+      --pagination-container-box-shadow: 0 0.125rem 0.25rem rgba(255,255,255,0.1);
+      --pagination-link-bg: #3b3b3b;
+      --pagination-link-color: #ffffff;
+      --pagination-link-border: 1px solid #555;
+      --pagination-active-bg: #007bff;
+      --pagination-active-border: #007bff;
+      --pagination-active-color: #ffffff;
+      --pagination-disabled-bg: #3b3b3b;
+      --pagination-disabled-color: #888888;
+      --pagination-disabled-border: 1px solid #555;
+
+      --input-group-text-bg: #3b3b3b;
+      --input-group-text-color: #ffffff;
+      --input-group-text-border: 1px solid #555;
+      --form-select-bg: #3b3b3b;
+      --form-select-border: 1px solid #555;
+      --form-select-color: #ffffff;
+      --custom-select-caret-color: #ffffff;
+
+      --card-bg: #3b3b3b;
+      --card-color: #ffffff;
+      --card-border: 1px solid #555;
+
+      --footer-bg: #1b1f23;
+      --footer-color: #ffffff;
+      --footer-box-shadow: 0 -0.125rem 0.25rem rgba(255,255,255,0.1);
+
+      --theme-slider-bg: #555;
+      --theme-slider-icon-bg: #000;
+      --theme-slider-icon-color: #fff;
+    }
+
     html, body {
       height: 100%;
     }
     body {
-      background-color: #f8f9fa;
+      background-color: var(--body-bg);
+      color: var(--body-color);
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
     }
-    /* Main content flex: 1 will push footer to the bottom */
+
     .main-content {
       flex: 1;
     }
-    /* Table container styling (desktop) */
-    #tableContainer {
-      background-color: #fff;
-      border-radius: 0.5rem;
-      padding: 1rem;
-      box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
-    }
-    /* Card container styling (mobile) */
-    #cardContainer .card {
-      margin-bottom: 1rem;
-    }
-    /* Pagination container styling */
-    .pagination-container {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-      padding: 0.5rem;
-      background-color: #fff;
-      border-radius: 0.5rem;
-      box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
-    }
-    .pagination-container .page-size {
-      margin-left: 1rem;
-    }
+
+    /* Navbar */
     .navbar {
-      background-color: #ffffff;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      background-color: var(--navbar-bg);
+      box-shadow: var(--navbar-box-shadow);
+      transition: background-color 0.3s;
+      position: sticky;
+      top: 0;
+      z-index: 1030;
     }
-    /* Responsive: small screens */
+    .navbar .navbar-brand,
+    .navbar .nav-link {
+      color: var(--navbar-text) !important;
+    }
+
+    .navbar-toggler {
+      border-color: var(--navbar-toggler-border);
+    }
+
+    .navbar-toggler i {
+      font-size: 1.5rem;
+      color: var(--navbar-text);
+      transition: color 0.3s;
+    }
+
+    .navbar-collapse {
+      max-height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
     @media (max-width: 576px) {
       .pagination-container {
         flex-direction: column;
@@ -64,28 +196,243 @@
         margin-left: 0;
       }
     }
-    /* Sticky Footer styling */
+
+    /* Tema Toggle Slider */
+    .theme-slider {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: var(--theme-slider-bg);
+      border-radius: 30px;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: middle;
+      transition: background 0.3s;
+    }
+    .theme-slider .slider-icon {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 26px;
+      height: 26px;
+      background: var(--theme-slider-icon-bg);
+      color: var(--theme-slider-icon-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      font-size: 16px;
+    }
+    .theme-slider input {
+      display: none;
+    }
+    .theme-slider .slider-icon .fa-sun {
+      display: block;
+    }
+    .theme-slider .slider-icon .fa-moon {
+      display: none;
+    }
+    .theme-slider input:checked ~ .slider-icon {
+      left: 32px;
+      background: #fff;
+      color: #000;
+    }
+    .theme-slider input:checked ~ .slider-icon .fa-sun {
+      display: none;
+    }
+    .theme-slider input:checked ~ .slider-icon .fa-moon {
+      display: block;
+    }
+
+    /* Table Container */
+    #tableContainer {
+      color: var(--table-color);
+      background-color: var(--table-container-bg);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: var(--table-container-box-shadow);
+    }
+    .table-responsive {
+      background-color: var(--table-responsive-bg);
+      border: var(--table-responsive-border);
+    }
+    .table {
+      background-color: var(--table-bg);
+      color: var(--table-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .table thead {
+      background-color: var(--table-thead-bg) !important;
+      color: var(--table-thead-color);
+    }
+    .table tbody tr {
+      background-color: var(--table-tbody-bg);
+      color: var(--table-tbody-color);
+    }
+    .table > :not(caption) > * > * {
+      border-color: var(--table-border-color) !important;
+      background-color: var(--table-bg) !important;
+      color: var(--table-color) !important;
+    }
+
+    /* Modal */
+    .modal-content {
+      background-color: var(--modal-bg);
+      color: var(--modal-color);
+      border: none;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .modal-content input,
+    .modal-content select {
+      background-color: var(--modal-input-bg);
+      color: var(--modal-input-color);
+      border: var(--modal-input-border);
+    }
+
+    .modal-header {
+      border-bottom: var(--modal-border);
+    }
+    .modal-footer {
+      border-top: var(--modal-border);
+    }
+
+    /* Pagination Container */
+    .pagination-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background-color: var(--pagination-container-bg);
+      box-shadow: var(--pagination-container-box-shadow);
+      transition: background-color 0.3s;
+    }
+    .pagination-container .page-size {
+      margin-left: 1rem;
+    }
+
+    /* Pagination */
+    .pagination .page-link {
+      background-color: var(--pagination-link-bg);
+      color: var(--pagination-link-color) !important;
+      border: var(--pagination-link-border);
+    }
+    .pagination .page-item.active .page-link {
+      background-color: var(--pagination-active-bg) !important;
+      border-color: var(--pagination-active-border) !important;
+      color: var(--pagination-active-color) !important;
+    }
+    .pagination .page-item.disabled .page-link {
+      background-color: var(--pagination-disabled-bg) !important;
+      color: var(--pagination-disabled-color) !important;
+      border: var(--pagination-disabled-border) !important;
+    }
+
+    /* Input Group Text */
+    .input-group-text {
+      background-color: var(--input-group-text-bg);
+      color: var(--input-group-text-color);
+      border: var(--input-group-text-border);
+    }
+
+    /* Form Select */
+    .form-select {
+      background-color: var(--form-select-bg);
+      border: var(--form-select-border);
+      color: var(--form-select-color);
+      background-image: none !important;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 2.5rem;
+    }
+    .form-select:focus {
+      background-color: var(--form-select-bg);
+      border-color: #777;
+      color: var(--form-select-color);
+    }
+
+    /* Custom Select Wrapper & Caret */
+    .custom-select-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+    .custom-select-wrapper .custom-caret {
+      position: absolute;
+      top: 50%;
+      right: 0.75rem;
+      pointer-events: none;
+      transform: translateY(-50%);
+      color: var(--custom-select-caret-color);
+    }
+
+    .custom-select-wrapper select {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    /* Card */
+    .card {
+      background-color: var(--card-bg);
+      color: var(--card-color);
+      border: var(--card-border);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .card .card-body {
+      background-color: var(--card-bg);
+      color: var(--card-color);
+    }
+    #cardContainer .card {
+      margin-bottom: 1rem;
+    }
+
+    /* Footer */
     footer {
-      background-color: #ffffff;
-      box-shadow: 0 -0.125rem 0.25rem rgba(0,0,0,0.075);
+      background-color: var(--footer-bg);
+      color: var(--footer-color);
+      box-shadow: var(--footer-box-shadow);
       padding: 1rem 0;
+      margin-top: auto;
     }
   </style>
 </head>
 <body>
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img src="/logo.png" alt="Logo" width="30" height="30" class="d-inline-block align-top">
       Todo App
     </a>
+    <!-- Navbar Toggler: Font Awesome "bars" -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+        <!-- Tema Toggle Slider -->
+        <li class="nav-item">
+          <label class="theme-slider mb-0 ms-3">
+            <input type="checkbox" id="themeToggleInput" />
+            <div class="slider-icon">
+              <i class="fas fa-sun"></i>
+              <i class="fas fa-moon"></i>
+            </div>
+          </label>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
 
-<!-- Main content -->
+<!-- Main Content -->
 <div class="main-content container my-4">
-  <!-- Header & Create Button -->
   <div class="row mb-3">
     <div class="col-12 d-flex justify-content-between align-items-center">
       <h2 class="mb-0">Todo List</h2>
@@ -95,7 +442,7 @@
     </div>
   </div>
 
-  <!-- Desktop Table View (visible on sm and up) -->
+  <!-- Desktop Table View -->
   <div id="tableContainer" class="d-none d-sm-block">
     <div class="table-responsive">
       <table class="table table-hover align-middle" id="todoTable">
@@ -110,32 +457,36 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Table rows will be injected here -->
+        <!-- Tablo satırları JavaScript ile eklenecek -->
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- Mobile Card View (visible on xs) -->
+  <!-- Mobile Card View -->
   <div id="cardContainer" class="d-block d-sm-none">
-    <!-- Card items will be injected here -->
+    <!-- Mobil kartlar JavaScript ile eklenecek -->
   </div>
 
-  <!-- Pagination & Page Size Section -->
+  <!-- Pagination & Page Size -->
   <div class="pagination-container">
     <nav aria-label="Todo pagination">
       <ul class="pagination mb-0" id="paginationControls">
-        <!-- Pagination controls rendered via JavaScript -->
+        <!-- Pagination kontrolleri JavaScript ile eklenecek -->
       </ul>
     </nav>
     <div class="page-size">
       <div class="input-group">
         <span class="input-group-text" id="pageSizeLabel">Size</span>
-        <select class="form-select" id="pageSizeSelect" aria-label="Page size">
-          <option value="5">5</option>
-          <option value="10" selected>10</option>
-          <option value="20">20</option>
-        </select>
+        <!-- Custom select wrapper for form select with Font Awesome caret -->
+        <div class="custom-select-wrapper">
+          <select class="form-select" id="pageSizeSelect" aria-label="Page size">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+          </select>
+          <span class="custom-caret"><i class="fas fa-caret-down"></i></span>
+        </div>
       </div>
     </div>
   </div>
@@ -147,12 +498,15 @@
     <form class="modal-content" id="createForm">
       <div class="modal-header">
         <h5 class="modal-title" id="createModalLabel">Create New Todo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!-- Modal Close Butonu: Font Awesome "times" -->
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="modal-body">
         <div class="mb-3">
           <label for="createTitle" class="form-label">Title</label>
-          <input type="text" class="form-control" id="createTitle" required>
+          <input type="text" class="form-control" id="createTitle" required />
         </div>
       </div>
       <div class="modal-footer">
@@ -165,19 +519,21 @@
   </div>
 </div>
 
-<!-- UPDATE Todo Modal (Full Update / PUT) -->
+<!-- UPDATE Todo Modal -->
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <form class="modal-content" id="updateForm">
       <div class="modal-header">
         <h5 class="modal-title" id="updateModalLabel">Update Todo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="modal-body">
-        <input type="hidden" id="updateId">
+        <input type="hidden" id="updateId" />
         <div class="mb-3">
           <label for="updateTitle" class="form-label">Title</label>
-          <input type="text" class="form-control" id="updateTitle" required>
+          <input type="text" class="form-control" id="updateTitle" required />
         </div>
         <div class="mb-3">
           <label for="updateCompleted" class="form-label">Completed?</label>
@@ -197,16 +553,18 @@
   </div>
 </div>
 
-<!-- Confirmation Modal for Delete -->
+<!-- Confirmation Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="confirmModalLabel">Confirm Deletion</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="modal-body" id="confirmModalBody">
-        <!-- Confirmation message set dynamically -->
+        <!-- Confirmation mesajı JavaScript ile belirlenecek -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="confirmCancelBtn" data-bs-dismiss="modal">Cancel</button>
@@ -223,14 +581,38 @@
   </div>
 </footer>
 
-<!-- Bootstrap Bundle JS (includes Popper) -->
+<!-- Bootstrap Bundle JS -->
 <script src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Custom JavaScript -->
 <script>
-  let totalPages = 10;
+  // Tema Yönetimi: Slider Toggle (Sun & Moon)
+  const themeToggleInput = document.getElementById('themeToggleInput');
+  const currentTheme = localStorage.getItem('theme') || 'light';
+
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeToggleInput.checked = true;
+    } else {
+      document.body.classList.remove('dark-theme');
+      themeToggleInput.checked = false;
+    }
+    localStorage.setItem('theme', theme);
+  }
+
+  themeToggleInput.addEventListener('change', () => {
+    const newTheme = themeToggleInput.checked ? 'dark' : 'light';
+    applyTheme(newTheme);
+  });
+
+  applyTheme(currentTheme);
+
+  // Demo configuration: toplam sayfa sayısı
+  const totalCount = 10;
   let currentPage = 0;
   let pageSize = 10;
+  totalPages = Math.ceil(totalCount / pageSize);
   const baseUrl = '/api/v1/todos';
 
   const todoTableBody = document.querySelector('#todoTable tbody');
@@ -254,9 +636,7 @@
       if (!res.ok) throw new Error('Failed to fetch todos');
       const todos = await res.json();
       renderTodos(todos);
-      if (todos.length < pageSize) {
-        totalPages = currentPage + 1;
-      }
+      totalPages = Math.ceil(totalCount / pageSize);
       updatePaginationControls();
     } catch (err) {
       console.error(err);
@@ -353,11 +733,13 @@
     paginationControls.innerHTML = html;
   }
 
-  window.goToPage = function(page) {
+
+  function goToPage(page) {
     if (page < 0 || page >= totalPages) return;
     currentPage = page;
     fetchTodos();
-  };
+  }
+  window.goToPage = goToPage;
 
   function formatDate(isoString) {
     if (!isoString) return '';
