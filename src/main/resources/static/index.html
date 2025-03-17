@@ -485,6 +485,7 @@
         <!-- Pagination kontrolleri JavaScript ile eklenecek -->
       </ul>
     </nav>
+    <div id="paginationSummary" class="text-center flex-grow-1"></div>
     <div class="page-size">
       <div class="input-group">
         <span class="input-group-text" id="pageSizeLabel">Size</span>
@@ -709,7 +710,7 @@
 
   function updatePaginationControls(pageData) {
     const totalPages = pageData.totalPages;
-    const currentPage = pageData.number; // aktif sayfa (0 bazlı)
+    const totalElements = pageData.totalElements;
     const pageFirst = pageData.first;
     const pageLast = pageData.last;
 
@@ -757,6 +758,11 @@
     html += createItem(totalPages - 1, '<i class="fas fa-angle-double-right"></i>', pageLast);
 
     paginationControls.innerHTML = html;
+
+    const startItem = totalElements === 0 ? 0 : currentPage * pageSize + 1;
+    const endItem = Math.min((currentPage + 1) * pageSize, totalElements);
+    const summaryHtml = `Showing ${startItem}-${endItem} of ${totalElements} items`;
+    document.getElementById("paginationSummary").innerHTML = summaryHtml;
   }
 
 
