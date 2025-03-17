@@ -79,20 +79,6 @@ cd spring-boot-reactive-example
 
 ## 🧪 Testing
 
-To test the application:
-
-```bash
-curl -X GET http://localhost:8080/api/v1/hello
-```
-
-Expected response:
-
-```json
-{
-  "message": "Hello, GraalVM Native Image!"
-}
-```
-
 ### Running Unit Tests
 
 Run the following command to execute unit tests:
