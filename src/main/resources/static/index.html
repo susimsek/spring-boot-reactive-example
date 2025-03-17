@@ -609,10 +609,8 @@
   applyTheme(currentTheme);
 
   // Demo configuration: toplam sayfa sayısı
-  const totalCount = 10;
   let currentPage = 0;
   let pageSize = 10;
-  totalPages = Math.ceil(totalCount / pageSize);
   const baseUrl = '/api/v1/todos';
 
   const todoTableBody = document.querySelector('#todoTable tbody');
@@ -634,10 +632,10 @@
     try {
       const res = await fetch(`${baseUrl}?page=${currentPage}&size=${pageSize}`);
       if (!res.ok) throw new Error('Failed to fetch todos');
-      const todos = await res.json();
+      const pageData = await res.json();
+      const todos = pageData.content;
       renderTodos(todos);
-      totalPages = Math.ceil(totalCount / pageSize);
-      updatePaginationControls();
+      updatePaginationControls(pageData);
     } catch (err) {
       console.error(err);
     }
@@ -699,46 +697,50 @@
     });
   }
 
-  function updatePaginationControls() {
+  function updatePaginationControls(pageData) {
+    const totalPages = pageData.totalPages;
+    const pageFirst = pageData.first;
+    const pageLast = pageData.last;
+
     let html = '';
 
-    html += `<li class="page-item ${currentPage === 0 ? 'disabled' : ''}">
-        <button type="button" class="page-link" onclick="goToPage(0)" aria-label="First">
-          <i class="fas fa-angle-double-left"></i>
-        </button>
-      </li>`;
+    html += `<li class="page-item ${pageFirst ? 'disabled' : ''}">
+      <button type="button" class="page-link" onclick="goToPage(0, ${totalPages})" aria-label="First">
+        <i class="fas fa-angle-double-left"></i>
+      </button>
+    </li>`;
 
-    html += `<li class="page-item ${currentPage === 0 ? 'disabled' : ''}">
-        <button type="button" class="page-link" onclick="goToPage(${currentPage - 1})" aria-label="Previous">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-      </li>`;
+    html += `<li class="page-item ${pageFirst ? 'disabled' : ''}">
+      <button type="button" class="page-link" onclick="goToPage(currentPage - 1, ${totalPages})" aria-label="Previous">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+    </li>`;
 
     html += `<li class="page-item active">
-        <span class="page-link">${currentPage + 1}</span>
-      </li>`;
+      <span class="page-link">${currentPage + 1}</span>
+    </li>`;
 
-    html += `<li class="page-item ${currentPage >= totalPages - 1 ? 'disabled' : ''}">
-        <button type="button" class="page-link" onclick="goToPage(${currentPage + 1})" aria-label="Next">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </li>`;
+    html += `<li class="page-item ${pageLast ? 'disabled' : ''}">
+      <button type="button" class="page-link" onclick="goToPage(currentPage + 1, ${totalPages})" aria-label="Next">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </li>`;
 
-    html += `<li class="page-item ${currentPage >= totalPages - 1 ? 'disabled' : ''}">
-        <button type="button" class="page-link" onclick="goToPage(${totalPages - 1})" aria-label="Last">
-          <i class="fas fa-angle-double-right"></i>
-        </button>
-      </li>`;
+    html += `<li class="page-item ${pageLast ? 'disabled' : ''}">
+      <button type="button" class="page-link" onclick="goToPage(${totalPages - 1}, ${totalPages})" aria-label="Last">
+        <i class="fas fa-angle-double-right"></i>
+      </button>
+    </li>`;
 
     paginationControls.innerHTML = html;
   }
 
-
-  function goToPage(page) {
+  function goToPage(page, totalPages) {
     if (page < 0 || page >= totalPages) return;
     currentPage = page;
     fetchTodos();
   }
+
   window.goToPage = goToPage;
 
   function formatDate(isoString) {
