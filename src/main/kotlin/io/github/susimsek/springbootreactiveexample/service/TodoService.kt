@@ -7,10 +7,7 @@ import io.github.susimsek.springbootreactiveexample.dto.UpdateTodoDTO
 import io.github.susimsek.springbootreactiveexample.exception.ResourceNotFoundException
 import io.github.susimsek.springbootreactiveexample.mapper.TodoMapper
 import io.github.susimsek.springbootreactiveexample.repository.TodoRepository
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -30,11 +27,8 @@ class TodoService(
 
     @Transactional(readOnly = true)
     suspend fun getTodos(pageable: Pageable): Page<TodoDTO> {
-        val todosList = todoRepository.findAllBy(pageable)
+        return todoRepository.findPagedTodos(pageable)
             .map { todoMapper.toDto(it) }
-            .toList()
-        val totalCount = todoRepository.count()
-        return PageImpl(todosList, pageable, totalCount)
     }
 
     @Transactional
