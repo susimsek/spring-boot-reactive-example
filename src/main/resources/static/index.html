@@ -699,41 +699,57 @@
 
   function updatePaginationControls(pageData) {
     const totalPages = pageData.totalPages;
+    const currentPage = pageData.number; // aktif sayfa (0 bazlı)
     const pageFirst = pageData.first;
     const pageLast = pageData.last;
 
     let html = '';
 
-    html += `<li class="page-item ${pageFirst ? 'disabled' : ''}">
-      <button type="button" class="page-link" onclick="goToPage(0, ${totalPages})" aria-label="First">
-        <i class="fas fa-angle-double-left"></i>
-      </button>
-    </li>`;
+    const createItem = (page, label, disabled = false, active = false) =>
+      `<li class="page-item ${disabled ? 'disabled' : ''} ${active ? 'active' : ''}">
+        <button class="page-link" onclick="goToPage(${page})">${label}</button>
+      </li>`;
 
-    html += `<li class="page-item ${pageFirst ? 'disabled' : ''}">
-      <button type="button" class="page-link" onclick="goToPage(currentPage - 1, ${totalPages})" aria-label="Previous">
-        <i class="fas fa-chevron-left"></i>
-      </button>
-    </li>`;
+    // First & Prev
+    html += createItem(0, '<i class="fas fa-angle-double-left"></i>', pageFirst);
+    html += createItem(currentPage - 1, '<i class="fas fa-chevron-left"></i>', pageFirst);
 
-    html += `<li class="page-item active">
-      <span class="page-link">${currentPage + 1}</span>
-    </li>`;
+    // Sayfa numaraları (en fazla 5 öğe, ellipsis dahil)
+    if (totalPages <= 5) {
+      for (let i = 0; i < totalPages; i++) {
+        html += createItem(i, i + 1, false, currentPage === i);
+      }
+    } else {
+      if (currentPage <= 2) {
+        // Başlangıç kısmındayken
+        for (let i = 0; i < 3; i++)
+          html += createItem(i, i + 1, false, currentPage === i);
+        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        html += createItem(totalPages - 1, totalPages);
+      } else if (currentPage >= totalPages - 3) {
+        // Son kısımdaysa
+        html += createItem(0, 1);
+        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        for (let i = totalPages - 3; i < totalPages; i++)
+          html += createItem(i, i + 1, false, currentPage === i);
+      } else {
+        // Ortadayken
+        html += createItem(0, 1);
+        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        html += createItem(currentPage, currentPage + 1, false, true);
+        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+        html += createItem(totalPages - 1, totalPages);
+      }
+    }
 
-    html += `<li class="page-item ${pageLast ? 'disabled' : ''}">
-      <button type="button" class="page-link" onclick="goToPage(currentPage + 1, ${totalPages})" aria-label="Next">
-        <i class="fas fa-chevron-right"></i>
-      </button>
-    </li>`;
-
-    html += `<li class="page-item ${pageLast ? 'disabled' : ''}">
-      <button type="button" class="page-link" onclick="goToPage(${totalPages - 1}, ${totalPages})" aria-label="Last">
-        <i class="fas fa-angle-double-right"></i>
-      </button>
-    </li>`;
+    // Next & Last
+    html += createItem(currentPage + 1, '<i class="fas fa-chevron-right"></i>', pageLast);
+    html += createItem(totalPages - 1, '<i class="fas fa-angle-double-right"></i>', pageLast);
 
     paginationControls.innerHTML = html;
   }
+
+
 
   function goToPage(page, totalPages) {
     if (page < 0 || page >= totalPages) return;
