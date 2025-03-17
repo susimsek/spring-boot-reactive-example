@@ -42,6 +42,7 @@
       --modal-input-bg: #fff;
       --modal-input-color: #000;
       --modal-input-border: 1px solid #ccc;
+      --modal-input-focus-border: #777;
       --modal-border: 1px solid #ccc;
 
       /* Pagination */
@@ -109,6 +110,7 @@
       --modal-input-bg: #3b3b3b;
       --modal-input-color: #ffffff;
       --modal-input-border: 1px solid #555;
+      --modal-input-focus-border: #999;
       --modal-border: 1px solid #555;
 
       --pagination-container-bg: #3b3b3b;
@@ -288,6 +290,14 @@
       background-color: var(--modal-input-bg);
       color: var(--modal-input-color);
       border: var(--modal-input-border);
+    }
+
+    .modal-content input:focus,
+    .modal-content select:focus {
+      background-color: var(--modal-input-bg);
+      color: var(--modal-input-color);
+      border-color: var(--modal-input-focus-border);
+      outline: none;
     }
 
     .modal-header {
