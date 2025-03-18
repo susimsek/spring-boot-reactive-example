@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.Size
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -43,6 +44,10 @@ class TodoController(private val todoService: TodoService) {
     @Operation(
         summary = "Get all Todos",
         description = "Retrieves a paginated list of todos"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Successful operation. Returns a paginated list of Todo items.",
     )
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     suspend fun getTodos(
@@ -72,6 +77,40 @@ class TodoController(private val todoService: TodoService) {
         val sort = Sort.by(Sort.Direction.valueOf(sortDirection), sortField)
         val pageable: Pageable = PageRequest.of(page, size, sort)
         return todoService.getTodos(pageable)
+    }
+
+    /**
+     * GET /todos/search : Search todos by title (case-insensitive) with pagination.
+     */
+    @Operation(
+        summary = "Search Todos",
+        description = "Retrieves a paginated list of todos filtered by title. " +
+            "If 'search' parameter is not provided, all todos are returned."
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Successful operation. Returns a paginated list of Todo items.",
+    )
+    @GetMapping("/search", produces = [MediaType.APPLICATION_JSON_VALUE])
+    suspend fun searchTodos(
+        @Parameter(description = "Search keyword for todo title", example = "Docker")
+        @RequestParam(required = false)
+        @Size(min = 1, max = 255)
+        search: String?,
+
+        @Parameter(description = "Page number (0-based index)", example = "0")
+        @RequestParam(required = false, defaultValue = "0")
+        @Min(0)
+        page: Int,
+
+        @Parameter(description = "Number of items per page", example = "10")
+        @RequestParam(required = false, defaultValue = "10")
+        @Min(1)
+        @Max(100)
+        size: Int
+    ): Page<TodoDTO> {
+        val pageable: Pageable = PageRequest.of(page, size)
+        return todoService.searchTodos(search, pageable)
     }
 
     /**

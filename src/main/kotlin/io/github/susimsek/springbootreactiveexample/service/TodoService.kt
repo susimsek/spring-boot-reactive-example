@@ -4,6 +4,7 @@ import io.github.susimsek.springbootreactiveexample.dto.CreateTodoDTO
 import io.github.susimsek.springbootreactiveexample.dto.PartialUpdateTodoDTO
 import io.github.susimsek.springbootreactiveexample.dto.TodoDTO
 import io.github.susimsek.springbootreactiveexample.dto.UpdateTodoDTO
+import io.github.susimsek.springbootreactiveexample.entity.Todo
 import io.github.susimsek.springbootreactiveexample.exception.ResourceNotFoundException
 import io.github.susimsek.springbootreactiveexample.mapper.TodoMapper
 import io.github.susimsek.springbootreactiveexample.repository.TodoRepository
@@ -29,6 +30,17 @@ class TodoService(
     suspend fun getTodos(pageable: Pageable): Page<TodoDTO> {
         return todoRepository.findPagedTodos(pageable)
             .map { todoMapper.toDto(it) }
+    }
+
+    @Transactional(readOnly = true)
+    suspend fun searchTodos(keyword: String?, pageable: Pageable): Page<TodoDTO> {
+        val todoPage: Page<Todo> = if (!keyword.isNullOrBlank()) {
+            todoRepository.searchTodos(keyword, pageable)
+        } else {
+            todoRepository.findPagedTodos(pageable)
+        }
+
+        return todoPage.map { todoMapper.toDto(it) }
     }
 
     @Transactional

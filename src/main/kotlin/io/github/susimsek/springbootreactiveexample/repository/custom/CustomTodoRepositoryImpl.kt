@@ -27,4 +27,16 @@ class CustomTodoRepositoryImpl(
             PageImpl(tuple.t1, pageable, tuple.t2)
         }.awaitSingle()
     }
+
+    override suspend fun searchTodos(keyword: String, pageable: Pageable): Page<Todo> {
+        val criteria = Criteria.where("title")
+            .like("%$keyword%").ignoreCase(true)
+        val query = Query.query(criteria).with(pageable)
+        return Mono.zip(
+            template.select(query, Todo::class.java).collectList(),
+            template.count(Query.query(criteria), Todo::class.java)
+        ).map { tuple ->
+            PageImpl(tuple.t1, pageable, tuple.t2)
+        }.awaitSingle()
+    }
 }
