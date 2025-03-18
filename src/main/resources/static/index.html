@@ -88,7 +88,7 @@
 
     body.dark-theme {
       /* Dark Theme Overrides */
-      --body-bg: #343a40;
+      --body-bg: #2c2c2c;
       --body-color: #ffffff;
 
       --navbar-bg: #1b1f23;
@@ -96,21 +96,21 @@
       --navbar-text: #ffffff;
       --navbar-toggler-border: #ffffff;
 
-      --table-responsive-bg: #3b3b3b;
+      --table-responsive-bg: #1b1f23;
       --table-responsive-border: 1px solid #555;
-      --table-bg: #3b3b3b;
+      --table-bg: #1b1f23;
       --table-color: #ffffff;
       --table-thead-bg: #464e53;
       --table-thead-color: #ffffff;
-      --table-tbody-bg: #3b3b3b;
+      --table-tbody-bg: #1b1f23;
       --table-tbody-color: #ffffff;
       --table-border-color: #555;
-      --table-container-bg: #3b3b3b;
+      --table-container-bg: #1b1f23;
       --table-container-box-shadow: 0 0.125rem 0.25rem rgba(255,255,255,0.1);
 
       --modal-bg: #2c2c2c;
       --modal-color: #ffffff;
-      --modal-input-bg: #3b3b3b;
+      --modal-input-bg: #1b1f23;
       --modal-input-color: #ffffff;
       --modal-input-border: 1px solid #555;
       --modal-input-focus-border: #999;
@@ -118,28 +118,28 @@
       --modal-input-placeholder-opacity: 0.8;
       --modal-border: 1px solid #555;
 
-      --pagination-container-bg: #3b3b3b;
+      --pagination-container-bg: #1b1f23;
       --pagination-container-box-shadow: 0 0.125rem 0.25rem rgba(255,255,255,0.1);
-      --pagination-link-bg: #3b3b3b;
+      --pagination-link-bg: #1b1f23;
       --pagination-link-color: #ffffff;
       --pagination-link-border: 1px solid #555;
       --pagination-active-bg: #007bff;
       --pagination-active-border: #007bff;
       --pagination-active-color: #ffffff;
-      --pagination-disabled-bg: #3b3b3b;
+      --pagination-disabled-bg: #1b1f23;
       --pagination-disabled-color: #888888;
       --pagination-disabled-border: 1px solid #555;
 
-      --input-group-text-bg: #3b3b3b;
+      --input-group-text-bg: #1b1f23;
       --input-group-text-color: #ffffff;
       --input-group-text-border: 1px solid #555;
       --input-box-shadow: 0 0.125rem 0.25rem rgba(255, 255, 255, 0.1);
-      --form-select-bg: #3b3b3b;
+      --form-select-bg: #1b1f23;
       --form-select-border: 1px solid #555;
       --form-select-color: #ffffff;
       --custom-select-caret-color: #ffffff;
 
-      --card-bg: #3b3b3b;
+      --card-bg: #1b1f23;
       --card-color: #ffffff;
       --card-border: 1px solid #555;
 
@@ -156,6 +156,7 @@
       height: 100%;
     }
     body {
+      margin-top: 70px;
       background-color: var(--body-bg);
       color: var(--body-color);
       display: flex;
@@ -173,9 +174,6 @@
       background-color: var(--navbar-bg);
       box-shadow: var(--navbar-box-shadow);
       transition: background-color 0.3s;
-      position: sticky;
-      top: 0;
-      z-index: 1030;
     }
     .navbar .navbar-brand,
     .navbar .nav-link {
@@ -472,7 +470,7 @@
 </head>
 <body>
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar fixed-top navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img src="/logo.png" alt="Logo" width="30" height="30" class="d-inline-block align-top">
