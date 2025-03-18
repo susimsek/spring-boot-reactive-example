@@ -364,6 +364,8 @@
       box-shadow: var(--pagination-container-box-shadow);
       transition: background-color 0.3s;
     }
+
+
     .pagination-container .page-size {
       margin-left: 1rem;
     }
@@ -467,7 +469,7 @@
       opacity: var(--modal-input-placeholder-opacity);
     }
 
-    /* Ortak input-group container */
+    /* Ortak input-group container (Search) */
     .search-input-group {
       border: 1px solid var(--modal-input-border);
       border-radius: 0.25rem;
@@ -501,46 +503,6 @@
     .search-input-group:focus-within {
       border-color: var(--modal-input-focus-border) !important;
       box-shadow: var(--modal-input-focus-shadow);
-    }
-
-    @media (pointer: fine) {
-      @supports (scrollbar-width:thin) {
-        html {
-          scrollbar-color:var(--scrollbar-thumb-color) var(--scrollbar-track-color)
-        }
-
-        body * {
-          scrollbar-color: var(--scrollbar-thumb-color) transparent;
-          scrollbar-width: thin
-        }
-      }
-
-      html::-webkit-scrollbar {
-        background-color: var(--scrollbar-track-color);
-        height: 12px;
-        width: 12px
-      }
-
-      body ::-webkit-scrollbar {
-        height: 6px;
-        width: 6px
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background-clip: padding-box;
-        background-color: var(--scrollbar-thumb-color);
-        border: 3px solid transparent;
-        border-radius: 12px
-      }
-
-      body ::-webkit-scrollbar-thumb {
-        border-radius: 6px;
-        border-width: 1.75px
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background-color: var(--scrollbar-hover-thumb-color)
-      }
     }
   </style>
 </head>
@@ -576,20 +538,42 @@
 
 <!-- Main Content -->
 <div class="main-content container my-4">
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <h2 class="mb-0">Todo List</h2>
-    </div>
-    <div class="col-md-6">
-      <form id="searchForm">
-        <div class="input-group search-input-group">
-          <input type="text" id="searchInput" class="form-control" placeholder="Search Todo" />
-          <span class="input-group-text">
-    <i class="fas fa-search"></i>
-  </span>
+  <div class="mb-3">
+    <h2 class="mb-md-3">Todo List</h2>
+    <div class="row mb-3">
+      <div class="col-12 col-md-4 mb-3 mb-md-0">
+        <form id="searchForm">
+          <div class="input-group search-input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search Todo" />
+            <span class="input-group-text">
+          <i class="fas fa-search"></i>
+        </span>
+          </div>
+        </form>
+      </div>
+      <div class="col-12 col-md-4 mb-3 mb-md-0">
+        <div class="input-group">
+      <span class="input-group-text">
+        <i class="fas fa-sort me-2"></i>Sort By
+      </span>
+          <select id="sortField" class="form-select">
+            <option value="TITLE">Title</option>
+            <option value="CREATED_AT" selected>Created At</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
         </div>
-      </form>
-    </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="input-group">
+      <span class="input-group-text">
+        <i class="fas fa-exchange-alt me-2"></i>Direction
+      </span>
+          <select id="sortDirection" class="form-select">
+            <option value="ASC">Ascending</option>
+            <option value="DESC" selected>Descending</option>
+          </select>
+        </div>
+      </div>
   </div>
 
   <!-- Desktop Table View -->
@@ -798,6 +782,16 @@
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('input', debounce(performSearch, 500));
 
+  // Sort select'lerine change event listener ekle
+  document.getElementById('sortField').addEventListener('change', () => {
+    currentPage = 0;
+    fetchTodos();
+  });
+  document.getElementById('sortDirection').addEventListener('change', () => {
+    currentPage = 0;
+    fetchTodos();
+  });
+
   // Arama formu submit olduğunda da arama tetiklenir
   document.getElementById('searchForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -808,14 +802,17 @@
   async function fetchTodos() {
     try {
       const searchValue = document.getElementById('searchInput').value.trim();
+      const sortField = document.getElementById('sortField').value;
+      const sortDirection = document.getElementById('sortDirection').value;
       let url = '';
       if (searchValue) {
-        // Arama parametresi varsa search endpoint'ini kullanıyoruz.
         url = `${baseUrl}/search?search=${encodeURIComponent(searchValue)}&page=${currentPage}&size=${pageSize}`;
       } else {
-        // Arama parametresi boşsa tüm verileri getiriyoruz.
         url = `${baseUrl}?page=${currentPage}&size=${pageSize}`;
       }
+      // Sort parametrelerini ekle
+      url += `&sortField=${sortField}&sortDirection=${sortDirection}`;
+
       const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to fetch todos');
       const pageData = await res.json();

@@ -107,9 +107,22 @@ class TodoController(private val todoService: TodoService) {
         @RequestParam(required = false, defaultValue = "10")
         @Min(1)
         @Max(100)
-        size: Int
+        size: Int,
+
+        @Parameter(description = "Sorting field", example = "CREATED_AT")
+        @Schema(implementation = TodoSortField::class)
+        @RequestParam(required = false, defaultValue = "CREATED_AT")
+        @EnumConstraint(enumClass = TodoSortField::class)
+        sortField: String,
+
+        @Parameter(description = "Sorting direction", example = "DESC")
+        @Schema(implementation = SortDirection::class)
+        @RequestParam(required = false, defaultValue = "DESC")
+        @EnumConstraint(enumClass = SortDirection::class)
+        sortDirection: String
     ): Page<TodoDTO> {
-        val pageable: Pageable = PageRequest.of(page, size)
+      val sort = Sort.by(Sort.Direction.valueOf(sortDirection), sortField)
+      val pageable: Pageable = PageRequest.of(page, size, sort)
         return todoService.searchTodos(search, pageable)
     }
 
