@@ -197,6 +197,10 @@
       overflow-y: auto;
     }
     @media (max-width: 576px) {
+      .search-input-group {
+        margin-top: 1rem;
+      }
+
       .pagination-container {
         flex-direction: column;
       }
@@ -436,12 +440,6 @@
       overflow: hidden;
       box-shadow: var(--input-box-shadow);
       transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    @media (max-width: 576px) {
-      .search-input-group {
-        margin-top: 1rem;
-      }
     }
 
     .search-input-group .form-control {
