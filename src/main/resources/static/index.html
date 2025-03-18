@@ -576,6 +576,12 @@
       </div>
   </div>
 
+    <div class="text-end mb-3">
+      <button class="btn btn-primary" type="button" onclick="openCreateModal()" title="Create Todo">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
   <!-- Desktop Table View -->
   <div id="tableContainer" class="d-none d-sm-block">
     <div class="table-responsive">
@@ -989,6 +995,13 @@
       console.error(err);
     }
   });
+
+  function openCreateModal() {
+    const createModalEl = document.getElementById('createModal');
+    const createModal = new bootstrap.Modal(createModalEl);
+    createModal.show();
+  }
+
 
   async function openUpdateModal(id) {
     try {
