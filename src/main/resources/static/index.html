@@ -590,8 +590,9 @@
           </span>
           <select id="sortField" class="form-select">
             <option value="TITLE">Title</option>
-            <option value="CREATED_AT" selected>Created At</option>
             <option value="COMPLETED">Completed</option>
+            <option value="CREATED_AT" selected>Created At</option>
+            <option value="UPDATED_AT">Updated At</option>
           </select>
         </div>
       </div>
@@ -625,7 +626,9 @@
           <th class="sortable" onclick="sortBy('CREATED_AT')">
             Created At <i id="sortIcon-CREATED_AT" class="fas fa-sort ms-2 sort-icon"></i>
           </th>
-          <th>Updated At</th>
+          <th class="sortable" onclick="sortBy('UPDATED_AT')">
+            Updated At <i id="sortIcon-UPDATED_AT" class="fas fa-sort ms-2 sort-icon"></i>
+          </th>
           <th class="text-end">Actions</th>
         </tr>
         </thead>
