@@ -583,9 +583,9 @@
         <thead class="table-light">
         <tr>
           <th>ID</th>
-          <th>Title</th>
-          <th>Completed</th>
-          <th>Created At</th>
+          <th onclick="sortBy('TITLE')">Title <i class="fas fa-sort ms-2"></i></th>
+          <th onclick="sortBy('COMPLETED')">Completed <i class="fas fa-sort ms-2"></i></th>
+          <th onclick="sortBy('CREATED_AT')">Created At <i class="fas fa-sort ms-2"></i></th>
           <th>Updated At</th>
           <th class="text-end">Actions</th>
         </tr>
@@ -777,6 +777,21 @@
     currentPage = 0; // Arama başladığında ilk sayfaya dön
     fetchTodos();
   }
+
+  function sortBy(field) {
+    const sortFieldEl = document.getElementById('sortField');
+    const sortDirectionEl = document.getElementById('sortDirection');
+
+    if (sortFieldEl.value === field) {
+      sortDirectionEl.value = sortDirectionEl.value === 'ASC' ? 'DESC' : 'ASC';
+    } else {
+      sortFieldEl.value = field;
+      sortDirectionEl.value = 'ASC';
+    }
+    currentPage = 0;
+    fetchTodos();
+  }
+
 
   // Input alanında her değişiklikte debounce uygulanır
   const searchInput = document.getElementById('searchInput');
