@@ -540,6 +540,11 @@
 <div class="main-content container my-4">
   <div class="mb-3">
     <h2 class="mb-md-3">Todo List</h2>
+    <div class="text-end mb-3">
+      <button class="btn btn-primary" type="button" onclick="openCreateModal()" title="Create Todo">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
     <div class="row mb-3">
       <div class="col-12 col-md-4 mb-3 mb-md-0">
         <form id="searchForm">
@@ -575,12 +580,6 @@
         </div>
       </div>
   </div>
-
-    <div class="text-end mb-3">
-      <button class="btn btn-primary" type="button" onclick="openCreateModal()" title="Create Todo">
-        <i class="fas fa-plus"></i>
-      </button>
-    </div>
 
   <!-- Desktop Table View -->
   <div id="tableContainer" class="d-none d-sm-block">
