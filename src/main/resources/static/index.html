@@ -35,6 +35,7 @@
       --table-responsive-border: 1px solid #ccc;
       --table-bg: #fff;
       --table-color: #000;
+      --table-hover-bg: #f1f1f1;
       --table-thead-bg: #f8f9fa;
       --table-thead-color: #000;
       --table-tbody-bg: #fff;
@@ -111,6 +112,7 @@
       --table-responsive-border: 1px solid #555;
       --table-bg: #1b1f23;
       --table-color: #ffffff;
+      --table-hover-bg: #333333;
       --table-thead-bg: #464e53;
       --table-thead-color: #ffffff;
       --table-tbody-bg: #1b1f23;
@@ -216,17 +218,14 @@
     .navbar .nav-link {
       color: var(--navbar-text) !important;
     }
-
     .navbar-toggler {
       border-color: var(--navbar-toggler-border);
     }
-
     .navbar-toggler i {
       font-size: 1.5rem;
       color: var(--navbar-text);
       transition: color 0.3s;
     }
-
     .navbar-collapse {
       max-height: calc(100vh - 56px);
       overflow-y: auto;
@@ -235,7 +234,6 @@
       .search-input-group {
         margin-top: 1rem;
       }
-
       .pagination-container {
         flex-direction: column;
       }
@@ -323,6 +321,10 @@
       color: var(--table-color) !important;
     }
 
+    .table-hover>tbody>tr:hover>* {
+      --bs-table-bg-state: var(--table-hover-bg);
+    }
+
     /* Modal */
     .modal-content {
       background-color: var(--modal-bg);
@@ -364,8 +366,6 @@
       box-shadow: var(--pagination-container-box-shadow);
       transition: background-color 0.3s;
     }
-
-
     .pagination-container .page-size {
       margin-left: 1rem;
     }
@@ -452,7 +452,7 @@
       padding: 1rem 0;
     }
 
-    /* Form Control (Input) Stilleri - Modal Input Stilleriyle Aynı */
+    /* Form Control (Input) */
     .form-control {
       background-color: var(--modal-input-bg);
       color: var(--modal-input-color);
@@ -477,7 +477,6 @@
       box-shadow: var(--input-box-shadow);
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-
     .search-input-group .form-control {
       border: none;
       outline: none;
@@ -485,12 +484,10 @@
       color: var(--modal-input-color);
       padding: 0.375rem 0.75rem;
     }
-
     .search-input-group .form-control:focus {
       outline: none !important;
       box-shadow: none !important;
     }
-
     .search-input-group .input-group-text {
       border: none;
       background-color: var(--modal-input-bg);
@@ -499,11 +496,40 @@
       align-items: center;
       padding: 0.375rem 0.75rem;
     }
-
     .search-input-group:focus-within {
       border-color: var(--modal-input-focus-border) !important;
       box-shadow: var(--modal-input-focus-shadow);
     }
+
+    /* ---- Eklenen Context Menu Stilleri ---- */
+    #contextMenu {
+      position: absolute;
+      z-index: 9999;
+      display: none;
+      width: 180px;
+      background: var(--table-bg);
+      border: 1px solid #ccc;
+      border: var(--modal-input-border);
+      box-shadow: var(--table-container-box-shadow);
+    }
+
+    #contextMenu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    #contextMenu ul li {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    #contextMenu ul li:hover {
+      background-color: var(--table-hover-bg);
+    }
+    /* ---- End Context Menu Stilleri ---- */
   </style>
 </head>
 <body>
@@ -541,6 +567,7 @@
   <div class="mb-3">
     <h2 class="mb-md-3">Todo List</h2>
     <div class="text-end mb-3">
+      <!-- Ekleme (Create) butonu; arama ve sort alanlarının üstünde, sağda -->
       <button class="btn btn-primary" type="button" onclick="openCreateModal()" title="Create Todo">
         <i class="fas fa-plus"></i>
       </button>
@@ -551,16 +578,16 @@
           <div class="input-group search-input-group">
             <input type="text" id="searchInput" class="form-control" placeholder="Search Todo" />
             <span class="input-group-text">
-          <i class="fas fa-search"></i>
-        </span>
+              <i class="fas fa-search"></i>
+            </span>
           </div>
         </form>
       </div>
       <div class="col-12 col-md-4 mb-3 mb-md-0">
         <div class="input-group">
-      <span class="input-group-text">
-        <i class="fas fa-sort me-2"></i>Sort By
-      </span>
+          <span class="input-group-text">
+            <i class="fas fa-sort me-2"></i>Sort By
+          </span>
           <select id="sortField" class="form-select">
             <option value="TITLE">Title</option>
             <option value="CREATED_AT" selected>Created At</option>
@@ -570,15 +597,16 @@
       </div>
       <div class="col-12 col-md-4">
         <div class="input-group">
-      <span class="input-group-text">
-        <i class="fas fa-exchange-alt me-2"></i>Direction
-      </span>
+          <span class="input-group-text">
+            <i class="fas fa-exchange-alt me-2"></i>Direction
+          </span>
           <select id="sortDirection" class="form-select">
             <option value="ASC">Ascending</option>
             <option value="DESC" selected>Descending</option>
           </select>
         </div>
       </div>
+    </div>
   </div>
 
   <!-- Desktop Table View -->
@@ -588,14 +616,20 @@
         <thead class="table-light">
         <tr>
           <th>ID</th>
-          <th onclick="sortBy('TITLE')">Title <i class="fas fa-sort ms-2"></i></th>
-          <th onclick="sortBy('COMPLETED')">Completed <i class="fas fa-sort ms-2"></i></th>
-          <th onclick="sortBy('CREATED_AT')">Created At <i class="fas fa-sort ms-2"></i></th>
+          <th class="sortable" onclick="sortBy('TITLE')">
+            Title <i id="sortIcon-TITLE" class="fas fa-sort ms-2 sort-icon"></i>
+          </th>
+          <th class="sortable" onclick="sortBy('COMPLETED')">
+            Completed <i id="sortIcon-COMPLETED" class="fas fa-sort ms-2 sort-icon"></i>
+          </th>
+          <th class="sortable" onclick="sortBy('CREATED_AT')">
+            Created At <i id="sortIcon-CREATED_AT" class="fas fa-sort ms-2 sort-icon"></i>
+          </th>
           <th>Updated At</th>
           <th class="text-end">Actions</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="todoBody">
         <!-- Tablo satırları JavaScript ile eklenecek -->
         </tbody>
       </table>
@@ -629,6 +663,15 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- Context Menu (Sağ tık menüsü) -->
+<div id="contextMenu">
+  <ul>
+    <li onclick="contextMarkAsComplete()"> <i class="fas fa-check-circle"></i> Mark as Completed</li>
+    <li onclick="contextUpdate()"> <i class="fas fa-edit"></i> Update</li>
+    <li onclick="contextDelete()"> <i class="fas fa-trash"></i> Delete</li>
+  </ul>
 </div>
 
 <!-- CREATE Todo Modal -->
@@ -724,35 +767,34 @@
 
 <!-- Custom JavaScript -->
 <script>
-  // Tema Yönetimi: Slider Toggle (Sun & Moon)
+  // Tema Yönetimi
   const themeToggleInput = document.getElementById('themeToggleInput');
   const currentTheme = localStorage.getItem('theme') || 'light';
-
   function applyTheme(theme) {
     if (theme === 'dark') {
       document.body.classList.add('dark-theme');
+      document.getElementById('contextMenu').classList.add('dark-theme');
       themeToggleInput.checked = true;
     } else {
       document.body.classList.remove('dark-theme');
+      document.getElementById('contextMenu').classList.remove('dark-theme');
       themeToggleInput.checked = false;
     }
     localStorage.setItem('theme', theme);
   }
-
   themeToggleInput.addEventListener('change', () => {
     const newTheme = themeToggleInput.checked ? 'dark' : 'light';
     applyTheme(newTheme);
   });
-
   applyTheme(currentTheme);
 
-  // Demo configuration: toplam sayfa sayısı
+  // Global değişkenler
   let currentPage = 0;
   let pageSize = 10;
   const baseUrl = '/api/v1/todos';
-
-  const todoTableBody = document.querySelector('#todoTable tbody');
+  const todoTableBody = document.querySelector('#todoBody');
   const cardContainer = document.getElementById('cardContainer');
+
   const createForm = document.getElementById('createForm');
   const createTitleInput = document.getElementById('createTitle');
 
@@ -766,43 +808,28 @@
   const pageSizeSelect = document.getElementById('pageSizeSelect');
   const paginationControls = document.getElementById('paginationControls');
 
-  // Debounce Fonksiyonu: Kullanıcının yazımını tamamlamasını bekler (500ms gecikme)
+  // Context Menu değişkenleri
+  let currentRowTodoId = null;
+  const contextMenu = document.getElementById('contextMenu');
+
+  // Debounce Fonksiyonu
   function debounce(func, delay) {
     let timeout;
     return function(...args) {
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        func.apply(this, args);
-      }, delay);
+      timeout = setTimeout(() => func.apply(this, args), delay);
     };
   }
 
-  // Arama işlemini tetikleyen fonksiyon
+  // Arama işlemi
   function performSearch() {
-    currentPage = 0; // Arama başladığında ilk sayfaya dön
-    fetchTodos();
-  }
-
-  function sortBy(field) {
-    const sortFieldEl = document.getElementById('sortField');
-    const sortDirectionEl = document.getElementById('sortDirection');
-
-    if (sortFieldEl.value === field) {
-      sortDirectionEl.value = sortDirectionEl.value === 'ASC' ? 'DESC' : 'ASC';
-    } else {
-      sortFieldEl.value = field;
-      sortDirectionEl.value = 'ASC';
-    }
     currentPage = 0;
     fetchTodos();
   }
-
-
-  // Input alanında her değişiklikte debounce uygulanır
   const searchInput = document.getElementById('searchInput');
   searchInput.addEventListener('input', debounce(performSearch, 500));
 
-  // Sort select'lerine change event listener ekle
+  // Sort select eventleri
   document.getElementById('sortField').addEventListener('change', () => {
     currentPage = 0;
     fetchTodos();
@@ -811,33 +838,58 @@
     currentPage = 0;
     fetchTodos();
   });
-
-  // Arama formu submit olduğunda da arama tetiklenir
   document.getElementById('searchForm').addEventListener('submit', (e) => {
     e.preventDefault();
     currentPage = 0;
     fetchTodos();
   });
 
+  // Sağ tık (context menu) için event listener'ı tablo satırlarına ekle
+  document.addEventListener('contextmenu', function(e) {
+    // Eğer sağ tıklama bir tablo satırı (tr) üzerinde gerçekleşiyorsa
+    let target = e.target;
+    while (target && target.tagName !== 'TR') {
+      target = target.parentElement;
+    }
+    if (target && target.dataset.todoId) {
+      e.preventDefault();
+      currentRowTodoId = target.dataset.todoId;
+      contextMenu.style.top = e.pageY + 'px';
+      contextMenu.style.left = e.pageX + 'px';
+      contextMenu.style.display = 'block';
+    } else {
+      contextMenu.style.display = 'none';
+    }
+  });
+  // Context menu gizleme (sağ tık dışında tıklama)
+  document.addEventListener('click', function(e) {
+    contextMenu.style.display = 'none';
+  });
+
+  // Context menü aksiyonları
+  function contextMarkAsComplete() {
+    markAsComplete(currentRowTodoId);
+  }
+  function contextUpdate() {
+    openUpdateModal(currentRowTodoId);
+  }
+  function contextDelete() {
+    deleteTodo(currentRowTodoId);
+  }
+
+  // Fetch Todos
   async function fetchTodos() {
     try {
-      const searchValue = document.getElementById('searchInput').value.trim();
+      const searchValue = searchInput.value.trim();
       const sortField = document.getElementById('sortField').value;
       const sortDirection = document.getElementById('sortDirection').value;
-      let url = '';
-      if (searchValue) {
-        url = `${baseUrl}/search?search=${encodeURIComponent(searchValue)}&page=${currentPage}&size=${pageSize}`;
-      } else {
-        url = `${baseUrl}?page=${currentPage}&size=${pageSize}`;
-      }
-      // Sort parametrelerini ekle
+      let url = searchValue ? `${baseUrl}/search?search=${encodeURIComponent(searchValue)}&page=${currentPage}&size=${pageSize}`
+        : `${baseUrl}?page=${currentPage}&size=${pageSize}`;
       url += `&sortField=${sortField}&sortDirection=${sortDirection}`;
-
       const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to fetch todos');
       const pageData = await res.json();
-      const todos = pageData.content;
-      renderTodos(todos);
+      renderTodos(pageData.content);
       updatePaginationControls(pageData);
     } catch (err) {
       console.error(err);
@@ -847,57 +899,55 @@
   function renderTodos(todos) {
     todoTableBody.innerHTML = '';
     cardContainer.innerHTML = '';
-
     todos.forEach(todo => {
-      // Masaüstü görünümü
+      // Masaüstü satırı
       const row = document.createElement('tr');
+      row.dataset.todoId = todo.id;
       row.innerHTML = `
-          <td>${todo.id}</td>
-          <td>${todo.title}</td>
-          <td>
-            ${todo.completed ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-danger">No</span>'}
-          </td>
-          <td>${formatDate(todo.createdAt)}</td>
-          <td>${formatDate(todo.updatedAt)}</td>
-          <td class="text-end">
-            <div class="btn-group" role="group" aria-label="Actions">
-              <button type="button" class="btn btn-secondary btn-sm" onclick="markAsComplete(${todo.id})" title="Mark as Completed">
-                <i class="fas fa-check-circle"></i>
-              </button>
-              <button type="button" class="btn btn-warning btn-sm" onclick="openUpdateModal(${todo.id})" title="Full Update">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button type="button" class="btn btn-danger btn-sm" onclick="deleteTodo(${todo.id})" title="Delete">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </td>
-        `;
+        <td>${todo.id}</td>
+        <td>${todo.title}</td>
+        <td>${todo.completed ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-danger">No</span>'}</td>
+        <td>${formatDate(todo.createdAt)}</td>
+        <td>${formatDate(todo.updatedAt)}</td>
+        <td class="text-end">
+          <div class="btn-group" role="group" aria-label="Actions">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="markAsComplete(${todo.id})" title="Mark as Completed">
+              <i class="fas fa-check-circle"></i>
+            </button>
+            <button type="button" class="btn btn-warning btn-sm" onclick="openUpdateModal(${todo.id})" title="Update">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="deleteTodo(${todo.id})" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      `;
       todoTableBody.appendChild(row);
 
       // Mobil kart görünümü
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
-          <div class="card-body">
-            <h5 class="card-title">${todo.title}</h5>
-            <p class="card-text mb-1"><strong>ID:</strong> ${todo.id}</p>
-            <p class="card-text mb-1"><strong>Completed:</strong> ${todo.completed ? 'Yes' : 'No'}</p>
-            <p class="card-text mb-1"><strong>Created:</strong> ${formatDate(todo.createdAt)}</p>
-            <p class="card-text mb-3"><strong>Updated:</strong> ${formatDate(todo.updatedAt)}</p>
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-secondary btn-sm" onclick="markAsComplete(${todo.id})">
-                <i class="fas fa-check-circle"></i>
-              </button>
-              <button type="button" class="btn btn-warning btn-sm" onclick="openUpdateModal(${todo.id})">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button type="button" class="btn btn-danger btn-sm" onclick="deleteTodo(${todo.id})">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
+        <div class="card-body">
+          <h5 class="card-title">${todo.title}</h5>
+          <p class="card-text mb-1"><strong>ID:</strong> ${todo.id}</p>
+          <p class="card-text mb-1"><strong>Completed:</strong> ${todo.completed ? 'Yes' : 'No'}</p>
+          <p class="card-text mb-1"><strong>Created:</strong> ${formatDate(todo.createdAt)}</p>
+          <p class="card-text mb-3"><strong>Updated:</strong> ${formatDate(todo.updatedAt)}</p>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="markAsComplete(${todo.id})">
+              <i class="fas fa-check-circle"></i>
+            </button>
+            <button type="button" class="btn btn-warning btn-sm" onclick="openUpdateModal(${todo.id})">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="deleteTodo(${todo.id})">
+              <i class="fas fa-trash"></i>
+            </button>
           </div>
-        `;
+        </div>
+      `;
       cardContainer.appendChild(card);
     });
   }
@@ -907,36 +957,26 @@
     const totalElements = pageData.totalElements;
     const pageFirst = pageData.first;
     const pageLast = pageData.last;
-
     let html = '';
-
     const createItem = (page, label, disabled = false, active = false) =>
       `<li class="page-item ${disabled ? 'disabled' : ''} ${active ? 'active' : ''}">
-          <button class="page-link" onclick="goToPage(${page}, ${totalPages})">${label}</button>
-        </li>`;
-
-    // First & Prev
+         <button class="page-link" onclick="goToPage(${page}, ${totalPages})">${label}</button>
+       </li>`;
     html += createItem(0, '<i class="fas fa-angle-double-left"></i>', pageFirst);
     html += createItem(currentPage - 1, '<i class="fas fa-chevron-left"></i>', pageFirst);
-
-    // Sayfa numaraları
     if (totalPages <= 5) {
       for (let i = 0; i < totalPages; i++) {
         html += createItem(i, i + 1, false, currentPage === i);
       }
     } else {
       if (currentPage <= 2) {
-        for (let i = 0; i < 3; i++) {
-          html += createItem(i, i + 1, false, currentPage === i);
-        }
+        for (let i = 0; i < 3; i++) { html += createItem(i, i + 1, false, currentPage === i); }
         html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
         html += createItem(totalPages - 1, totalPages);
       } else if (currentPage >= totalPages - 3) {
         html += createItem(0, 1);
         html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-        for (let i = totalPages - 3; i < totalPages; i++) {
-          html += createItem(i, i + 1, false, currentPage === i);
-        }
+        for (let i = totalPages - 3; i < totalPages; i++) { html += createItem(i, i + 1, false, currentPage === i); }
       } else {
         html += createItem(0, 1);
         html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
@@ -945,17 +985,12 @@
         html += createItem(totalPages - 1, totalPages);
       }
     }
-
-    // Next & Last
     html += createItem(currentPage + 1, '<i class="fas fa-chevron-right"></i>', pageLast);
     html += createItem(totalPages - 1, '<i class="fas fa-angle-double-right"></i>', pageLast);
-
     paginationControls.innerHTML = html;
-
     const startItem = totalElements === 0 ? 0 : currentPage * pageSize + 1;
     const endItem = Math.min((currentPage + 1) * pageSize, totalElements);
-    const summaryHtml = `Showing ${startItem}-${endItem} of ${totalElements} items`;
-    document.getElementById("paginationSummary").innerHTML = summaryHtml;
+    document.getElementById("paginationSummary").innerHTML = `Showing ${startItem}-${endItem} of ${totalElements} items`;
   }
 
   function goToPage(page, totalPages) {
@@ -963,24 +998,21 @@
     currentPage = page;
     fetchTodos();
   }
-
   window.goToPage = goToPage;
 
   function formatDate(isoString) {
-    if (!isoString) return '';
-    return new Date(isoString).toLocaleString();
+    return isoString ? new Date(isoString).toLocaleString() : '';
   }
 
   createForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const title = createTitleInput.value.trim();
     if (!title) return;
-    const newTodo = { title };
     try {
       const res = await fetch(baseUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTodo)
+        body: JSON.stringify({ title })
       });
       if (res.status === 201) {
         bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
@@ -996,19 +1028,56 @@
   });
 
   function openCreateModal() {
-    const createModalEl = document.getElementById('createModal');
-    const createModal = new bootstrap.Modal(createModalEl);
+    const createModal = new bootstrap.Modal(document.getElementById('createModal'));
     createModal.show();
+  }
+
+  function showConfirmModal(message) {
+    return new Promise((resolve) => {
+      // Get the modal element and update the modal body message
+      const modalEl = document.getElementById('confirmModal');
+      const modalBody = document.getElementById('confirmModalBody');
+      modalBody.textContent = message;
+
+      // Initialize the Bootstrap modal with a static backdrop and disabled keyboard
+      const confirmModal = new bootstrap.Modal(modalEl, {
+        backdrop: 'static',
+        keyboard: false
+      });
+
+      // Get the OK and Cancel buttons from the modal
+      const okButton = modalEl.querySelector('#confirmOkBtn');
+      const cancelButton = modalEl.querySelector('#confirmCancelBtn');
+
+      // Define event handlers for the buttons
+      function handleOk() {
+        cleanup();
+        resolve(true);
+      }
+      function handleCancel() {
+        cleanup();
+        resolve(false);
+      }
+      function cleanup() {
+        okButton.removeEventListener('click', handleOk);
+        cancelButton.removeEventListener('click', handleCancel);
+        confirmModal.hide();
+      }
+
+      // Attach the event listeners
+      okButton.addEventListener('click', handleOk);
+      cancelButton.addEventListener('click', handleCancel);
+
+      // Show the modal
+      confirmModal.show();
+    });
   }
 
 
   async function openUpdateModal(id) {
     try {
       const res = await fetch(`${baseUrl}/${id}`);
-      if (!res.ok) {
-        if (res.status === 404) throw new Error('Todo not found');
-        throw new Error('Failed to fetch todo by ID');
-      }
+      if (!res.ok) throw new Error('Failed to fetch todo by ID');
       const todo = await res.json();
       updateIdInput.value = todo.id;
       updateTitleInput.value = todo.title;
@@ -1025,17 +1094,13 @@
     const title = updateTitleInput.value.trim();
     const completed = updateCompletedSelect.value === 'true';
     if (!id || !title) return;
-    const updatedTodo = { title, completed };
     try {
       const res = await fetch(`${baseUrl}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedTodo)
+        body: JSON.stringify({ title, completed })
       });
-      if (!res.ok) {
-        if (res.status === 404) throw new Error('Todo not found');
-        throw new Error('Failed to update todo');
-      }
+      if (!res.ok) throw new Error('Failed to update todo');
       updateModal.hide();
       fetchTodos();
     } catch (err) {
@@ -1045,64 +1110,26 @@
 
   async function markAsComplete(id) {
     try {
-      const patchData = { completed: true };
       const res = await fetch(`${baseUrl}/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(patchData)
+        body: JSON.stringify({ completed: true })
       });
-      if (!res.ok) {
-        if (res.status === 404) throw new Error('Todo not found');
-        throw new Error('Failed to patch todo');
-      }
+      if (!res.ok) throw new Error('Failed to mark as completed');
       fetchTodos();
     } catch (err) {
       console.error(err);
     }
   }
 
-  function showConfirmModal(message) {
-    return new Promise((resolve) => {
-      const confirmModalEl = document.getElementById('confirmModal');
-      const confirmModal = new bootstrap.Modal(confirmModalEl);
-      document.getElementById('confirmModalBody').textContent = message;
-
-      const okButton = document.getElementById('confirmOkBtn');
-      const cancelButton = document.getElementById('confirmCancelBtn');
-
-      const cleanUp = () => {
-        okButton.replaceWith(okButton.cloneNode(true));
-        cancelButton.replaceWith(cancelButton.cloneNode(true));
-      };
-
-      const newOkButton = document.getElementById('confirmOkBtn');
-      const newCancelButton = document.getElementById('confirmCancelBtn');
-
-      newOkButton.addEventListener('click', () => {
-        cleanUp();
-        confirmModal.hide();
-        resolve(true);
-      });
-
-      newCancelButton.addEventListener('click', () => {
-        cleanUp();
-        confirmModal.hide();
-        resolve(false);
-      });
-
-      confirmModal.show();
-    });
-  }
-
   async function deleteTodo(id) {
     const confirmed = await showConfirmModal(`Are you sure you want to delete Todo #${id}?`);
     if (!confirmed) return;
+
     try {
       const res = await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
       if (res.status === 204) {
         fetchTodos();
-      } else if (res.status === 404) {
-        throw new Error('Todo not found');
       } else {
         throw new Error('Failed to delete todo');
       }
@@ -1111,13 +1138,59 @@
     }
   }
 
+  function sortBy(field) {
+    const sortFieldEl = document.getElementById('sortField');
+    const sortDirectionEl = document.getElementById('sortDirection');
+
+    // If the column is already the sorted field, cycle through ASC → DESC → unsorted
+    if (sortFieldEl.value === field) {
+      if (sortDirectionEl.value === 'ASC') {
+        sortDirectionEl.value = 'DESC';
+      } else if (sortDirectionEl.value === 'DESC') {
+        // Clear sorting (unsorted state)
+        sortFieldEl.value = "CREATED_AT";
+        sortDirectionEl.value = "DESC";
+      }
+    } else {
+      // Otherwise, set the new sorted field with default ASC order
+      sortFieldEl.value = field;
+      sortDirectionEl.value = 'ASC';
+    }
+    currentPage = 0;
+    fetchTodos();
+    updateSortIcons();
+  }
+
+  function updateSortIcons() {
+    const sortField = document.getElementById('sortField').value;
+    const sortDirection = document.getElementById('sortDirection').value;
+
+    // Reset all sortable icons to unsorted
+    document.querySelectorAll('th.sortable i.sort-icon').forEach(icon => {
+      icon.className = 'fas fa-sort ms-2 sort-icon';
+    });
+
+    // If there is a sorted field, update its icon accordingly
+    if (sortField) {
+      const sortedIcon = document.getElementById('sortIcon-' + sortField);
+      if (sortedIcon) {
+        sortedIcon.className = sortDirection === 'ASC'
+          ? 'fas fa-sort-up ms-2 sort-icon'
+          : 'fas fa-sort-down ms-2 sort-icon';
+      }
+    }
+  }
+
+
+
+
+
   pageSizeSelect.addEventListener('change', () => {
     pageSize = parseInt(pageSizeSelect.value);
     currentPage = 0;
     fetchTodos();
   });
 
-  // Sayfa yüklendiğinde veriler çekilir
   document.addEventListener('DOMContentLoaded', fetchTodos);
 </script>
 </body>
