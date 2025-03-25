@@ -1147,17 +1147,17 @@
 
     // If the column is already the sorted field, cycle through ASC → DESC → unsorted
     if (sortFieldEl.value === field) {
-      if (sortDirectionEl.value === 'ASC') {
-        sortDirectionEl.value = 'DESC';
-      } else if (sortDirectionEl.value === 'DESC') {
-        // Clear sorting (unsorted state)
+      if (field === "CREATED_AT" && sortDirectionEl.value === "DESC") {
+        sortDirectionEl.value = "ASC";
+      } else if (sortDirectionEl.value === "ASC") {
+        sortDirectionEl.value = "DESC";
+      } else if (sortDirectionEl.value === "DESC") {
         sortFieldEl.value = "CREATED_AT";
         sortDirectionEl.value = "DESC";
       }
     } else {
-      // Otherwise, set the new sorted field with default ASC order
       sortFieldEl.value = field;
-      sortDirectionEl.value = 'ASC';
+      sortDirectionEl.value = "ASC";
     }
     currentPage = 0;
     fetchTodos();
@@ -1172,6 +1172,10 @@
     document.querySelectorAll('th.sortable i.sort-icon').forEach(icon => {
       icon.className = 'fas fa-sort ms-2 sort-icon';
     });
+
+    if (sortField === "CREATED_AT" && sortDirection === "DESC") {
+      return;
+    }
 
     // If there is a sorted field, update its icon accordingly
     if (sortField) {
